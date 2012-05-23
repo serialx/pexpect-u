@@ -1,14 +1,27 @@
+Pexpect-u
+=========
+
 Pexpect-u is a fork of Pexpect by Thomas Kluyver that supports Python 3 and
 unicode.
-(Original repo: https://bitbucket.org/takluyver/pexpect)
 
-This is a fork of Pexpect-u to support:
+Original repo: https://bitbucket.org/takluyver/pexpect
+
+This is a *fork of Pexpect-u* to support:
+
  * Direct install from pip.
  * Adding various bugfixes to pxssh.
   * Works on AIX, Solaris boxes.
   * Remove annoying ASKPASS GUI.
 
-Below is the original README of Pexpect:
+
+Install
+-------
+
+ * pip install git+git://github.com/serialx/pexpect-u.git
+
+
+Original Pexpect README
+-----------------------
 
 Pexpect is a Pure Python Expect-like module
 
