@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 """This class extends pexpect.spawn to specialize setting up SSH connections.
 This adds methods for login, logout, and expecting the shell prompt.
 
@@ -205,7 +206,7 @@ class pxssh (spawn):
         expect_without_connection_closed = [
                 "(?i)are you sure you want to continue connecting",
                 original_prompt,
-                "(?i)(?:password)|(?:passphrase for key)",
+                u"(?i)(?:password|암호)|(?:passphrase for key)",
                 "(?i)permission denied",
                 "(?i)terminal type",
                 TIMEOUT]
