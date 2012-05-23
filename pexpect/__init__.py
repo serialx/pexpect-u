@@ -1252,7 +1252,9 @@ class spawnb(object):
             compile_flags = compile_flags | re.IGNORECASE
         compiled_pattern_list = []
         for p in patterns:
-            if isinstance(p, (bytes, unicode)):
+            if isinstance(p, unicode):
+                compiled_pattern_list.append(re.compile(p, compile_flags))
+            elif isinstance(p, bytes):
                 p = self._cast_buffer_type(p)
                 compiled_pattern_list.append(re.compile(p, compile_flags))
             elif p is EOF:
