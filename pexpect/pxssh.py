@@ -199,7 +199,19 @@ class pxssh (spawn):
         # This does not distinguish between a remote server 'password' prompt
         # and a local ssh 'passphrase' prompt (for unlocking a private key).
         spawn._spawn(self, cmd)
-        i = self.expect(["(?i)are you sure you want to continue connecting", original_prompt, "(?i)(?:password)|(?:passphrase for key)", "(?i)permission denied", "(?i)terminal type", TIMEOUT, "(?i)connection closed by remote host"], timeout=login_timeout)
+
+        expect_without_connection_closed = [
+                "(?i)are you sure you want to continue connecting",
+                original_prompt,
+                "(?i)(?:password)|(?:passphrase for key)",
+                "(?i)permission denied",
+                "(?i)terminal type",
+                TIMEOUT]
+        expect_with_connection_closed = (
+                expect_without_connection_closed +
+                ["(?i)connection closed by remote host"])
+
+        i = self.expect(expect_with_connection_closed, timeout=login_timeout)
 
         # First phase
         if i==0:
@@ -207,13 +219,13 @@ class pxssh (spawn):
             # This is what you get if SSH does not have the remote host's
             # public key stored in the 'known_hosts' cache.
             self.sendline("yes")
-            i = self.expect(["(?i)are you sure you want to continue connecting", original_prompt, "(?i)(?:password)|(?:passphrase for key)", "(?i)permission denied", "(?i)terminal type", TIMEOUT])
+            i = self.expect(expect_without_connection_closed)
         if i==2: # password or passphrase
             self.sendline(password)
-            i = self.expect(["(?i)are you sure you want to continue connecting", original_prompt, "(?i)(?:password)|(?:passphrase for key)", "(?i)permission denied", "(?i)terminal type", TIMEOUT])
+            i = self.expect(expect_without_connection_closed)
         if i==4:
             self.sendline(terminal_type)
-            i = self.expect(["(?i)are you sure you want to continue connecting", original_prompt, "(?i)(?:password)|(?:passphrase for key)", "(?i)permission denied", "(?i)terminal type", TIMEOUT])
+            i = self.expect(expect_without_connection_closed)
 
         # Second phase
         if i==0:
