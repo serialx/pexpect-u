@@ -79,6 +79,7 @@ try:
     import errno
     import traceback
     import signal
+    import warnings
 except ImportError, e:
     raise ImportError (str(e) + """
 
@@ -864,7 +865,11 @@ class spawnb(object):
                 self.flag_eof = True
                 raise EOF ('End Of File (EOF) in read_nonblocking(). Empty string style platform.')
 
-            s2 = self._cast_buffer_type(s)
+            try:
+                s2 = self._cast_buffer_type(s)
+            except UnicodeDecodeError:
+                s2 = s.decode(self.encoding, 'replace')
+                warnings.warn('Unicode decoding failed. Falling back to replace mode.', UnicodeWarning)
             if self.logfile is not None:
                 self.logfile.write(s2)
                 self.logfile.flush()
@@ -1626,8 +1631,14 @@ class spawn(spawnb):
         return p
     
     def read_nonblocking(self, size=1, timeout=-1):
-        return super(spawn, self).read_nonblocking(size=size, timeout=timeout)\
-                                    .decode(self.encoding)
+        try:
+            return super(spawn, self).read_nonblocking(size=size, timeout=timeout)\
+                                        .decode(self.encoding)
+        except UnicodeDecodeError:
+            warnings.warn('Unicode decoding failed. Falling back to replace mode.', UnicodeWarning)
+            return super(spawn, self).read_nonblocking(size=size, timeout=timeout)\
+                                        .decode(self.encoding, 'replace')
+
     
     read_nonblocking.__doc__ = spawnb.read_nonblocking.__doc__
         
