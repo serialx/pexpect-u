@@ -157,7 +157,9 @@ class pxssh (spawn):
 
     ### TODO: This is getting messy and I'm pretty sure this isn't perfect.
     ### TODO: I need to draw a flow chart for this.
-    def login (self,server,username,password='',terminal_type='ansi',original_prompt=r"[#$]",login_timeout=10,port=None,auto_prompt_reset=True,ssh_key=None):
+    def login (self, server, username, password='', terminal_type='ansi',
+            original_prompt=r"[#$]", login_timeout=10, port=None,
+            auto_prompt_reset=True, ssh_key=None, ssh_options=''):
 
         """This logs the user into the given server. It uses the
         'original_prompt' to try to find the prompt right after login. When it
@@ -183,7 +185,7 @@ class pxssh (spawn):
         manually set the PROMPT attribute. """
 
         # AskPassGUI=no option turns off the annoying GUI password dialog.
-        ssh_options = "-q -o 'AskPassGUI=no'"
+        ssh_options = ssh_options + ' ' + "-q -o 'AskPassGUI=no'"
         if self.force_password:
             ssh_options = ssh_options + ' ' + self.SSH_OPTS
         if port is not None:
