@@ -1776,7 +1776,7 @@ class searcher_re (object):
         """This returns a human-readable string that represents the state of
         the object."""
 
-        ss =  [ (n,'    %d: re.compile("%s")' % (n,str(s.pattern))) for n,s in self._searches]
+        ss =  [ (n,'    %d: re.compile(%s)' % (n,repr(s.pattern))) for n,s in self._searches]
         ss.append((-1,'searcher_re:'))
         if self.eof_index >= 0:
             ss.append ((self.eof_index,'    %d: EOF' % self.eof_index))
